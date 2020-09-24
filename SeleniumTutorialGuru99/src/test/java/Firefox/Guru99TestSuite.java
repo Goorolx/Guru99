@@ -14,7 +14,7 @@ import org.testng.Assert;
 
 import static Firefox.Utils.*;
 
-public class t01Guru99TestSuite {
+public class Guru99TestSuite {
 
     @Test
     public void t01loginToGuruBankSuccessful() {
