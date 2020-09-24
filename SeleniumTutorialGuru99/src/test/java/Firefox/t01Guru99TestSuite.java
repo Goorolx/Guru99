@@ -1,6 +1,7 @@
 package Firefox;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,7 +17,7 @@ import static Firefox.Utils.*;
 public class t01Guru99TestSuite {
 
     @Test
-    public void loginToGuruBankSuccessful() throws InterruptedException {
+    public void t01loginToGuruBankSuccessful() {
         WebDriver driver = webDriverStarter();
         WebDriverWait wait = waitStarter(driver);
         driver.get(BASE_URL);
@@ -32,6 +33,25 @@ public class t01Guru99TestSuite {
         String pageTitle = driver.getTitle();
         Assert.assertTrue(pageTitle.equalsIgnoreCase("Guru99 Bank Manager HomePage"));
 
+        driver.quit();
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/TestSetLogin1.csv", numLinesToSkip = 1)
+    public void t02loginToGuruBankFail(String USER_NAME, String PASSWD) {
+        WebDriver driver = webDriverStarter();
+        WebDriverWait wait = waitStarter(driver);
+        driver.get(BASE_URL);
+
+        //waiting for login field to show up
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("uid"))).click();
+
+        driver.findElement(By.name("uid")).sendKeys(USER_NAME); // type login
+        driver.findElement(By.name("password")).sendKeys(PASSWD); // type password
+        driver.findElement(By.name("btnLogin")).click();  //click login button
+
+        String pageAlert = driver.switchTo().alert().getText(); //getting alert massage
+        Assert.assertTrue(pageAlert.contains("User or Password is not valid"));
         driver.quit();
     }
 
